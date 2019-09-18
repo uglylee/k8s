@@ -20,7 +20,7 @@ spec:
     # v12 is luminous, v13 is mimic, and v14 is nautilus.
     # RECOMMENDATION: In production, use a specific version tag instead of the general v14 flag, which pulls the latest release and could result in different
     # versions running within the cluster. See tags available at https://hub.docker.com/r/ceph/ceph/tags/.
-    image: ceph/ceph:v14.2.1-20190430
+    image: ceph/ceph:v13
     # Whether to allow unsupported versions of Ceph. Currently luminous, mimic and nautilus are supported, with the recommendation to upgrade to nautilus.
     # Do not set to true in production.
     allowUnsupported: false
@@ -103,21 +103,23 @@ spec:
       # osdsPerDevice: "1" # this value can be overridden at the node or device level
       # encryptedDevice: "true" # the default value for this option is "false"
 # Cluster level list of directories to use for filestore-based OSD storage. If uncommented, this example would create an OSD under the dataDirHostPath.
-    #directories:
-    #- path: /var/lib/rook
+#    directories:
+ #   - path: /bdp-picb/ceph
 # Individual nodes and their config can be specified as well, but 'useAllNodes' above must be set to false. Then, only the named
 # nodes below will be used as storage resources.  Each node's 'name' field should match their 'kubernetes.io/hostname' label.
-#    nodes:
-#    - name: "172.17.4.101"
-#      directories: # specific directories to use for storage can be specified for each node
-#      - path: "/rook/storage-dir"
-#      resources:
-#        limits:
-#          cpu: "500m"
-#          memory: "1024Mi"
-#        requests:
-#          cpu: "500m"
-#          memory: "1024Mi"
+   #W nodes:
+#    - name: "k8s-master-01"
+     # directories: # specific directories to use for storage can be specified for each node
+      #- path: "/bdp-picb/ceph"
+       # devices:
+       # - name: "xvdb"
+     # resources:
+      #  limits:
+       #   cpu: "500m"
+        #  memory: "1024Mi"
+      #  requests:
+       #   cpu: "500m"
+        #  memory: "1024Mi"
 #    - name: "172.17.4.201"
 #      devices: # specific devices to use for storage can be specified for each node
 #      - name: "sdb"
