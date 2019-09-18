@@ -1,0 +1,21 @@
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: v1.15.3
+controlPlaneEndpoint: "apiserver.cluster.local:6443" # 使用解析名去访问APIserver
+apiServer:
+        certSANs:
+        - www.biosino.org
+        - dev.biosino.org
+        - 127.0.0.1
+        - apiserver.cluster.local
+        - 10.177.177.34
+        - 10.177.177.35
+        - 10.177.177.36
+        - 10.177.177.39        # 虚拟IP等都加入到证书中
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: "ipvs"
+ipvs:
+        excludeCIDRs: 
+        - "10.177.177.39/32" # 如果不加这个k8s会定时清理用户创建的IPVS规则，导致代理失败i

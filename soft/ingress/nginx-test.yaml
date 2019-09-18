@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: k8s-nginx-test
+  namespace: default
+spec:
+  rules:
+  - host: dev.biosino.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx-test
+          servicePort: 80

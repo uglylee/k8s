@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      imagePullSecrets:
+        - name: registry-pull-secret
+      serviceAccount: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: uglylee/nfs-client-provisioner:v2.0.0
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /home/k8s/pvshare
+          env:
+            - name: PROVISIONER_NAME
+              value: biosino.org/database
+            - name: NFS_SERVER
+              value: p300
+              #value: 10.10.166.121 
+            - name: NFS_PATH
+              value: /bdp-picb/pvshare
+              #value: /
+              #value: /mnt/p300/bdp/downloads/pvshare
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: p300 
+         #  server: 10.10.166.121 
+            #path: /
+           # server: p300
+            path: /bdp-picb/pvshare
+         #   path: /mnt/p300/bdp/downloads/pvshare
