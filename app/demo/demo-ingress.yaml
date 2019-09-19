@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  rules:
+  - host: api.mydomain.com
+    http:
+      paths:
+      - backend:
+          serviceName: api
+          servicePort: 80
+  - host: domain.com
+    http:
+      paths:
+      - path: /web/*
+        backend:
+          serviceName: web
+          servicePort: 8080
+  - host: backoffice.domain.com
+    http:
+      paths:
+      - backend:
+          serviceName: backoffice
+          servicePort: 8080

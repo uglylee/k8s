@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+
+kind: Ingress
+
+metadata:
+
+  name: tomcat-ingress
+
+spec:
+
+  rules:
+
+  - host: dev.biosino.org  # 通过此域名访问
+
+    http:
+
+      paths:
+
+      - backend:
+
+          serviceName: test-tomcat
+
+          servicePort: 80

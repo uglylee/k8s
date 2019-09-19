@@ -1,0 +1,71 @@
+kind: Deployment
+
+apiVersion: extensions/v1beta1
+
+metadata:
+
+  labels:
+
+    app: test-tomcat
+
+    version: v1.1.1
+
+  name: test-tomcat
+
+  namespace: default
+
+spec:
+
+  replicas: 1
+
+  selector:
+
+    matchLabels:
+
+      app: test-tomcat
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: test-tomcat
+
+    spec:
+
+      containers:
+
+      - name: test-tomcat
+
+        image: tomcat
+
+        imagePullPolicy: Always
+
+        ports:
+
+        - containerPort: 8080
+
+          protocol: TCP
+
+        args:
+
+          # Uncomment the following line to manually specify Kubernetes API server Host
+
+          # If not specified, Dashboard will attempt to auto discover the API server and connect
+
+          # to it. Uncomment only if the default does not work.
+
+#        - --apiserver-host=http://apiserver.cluster.local:6443  ## 请修改为自己的kube-apiserver
+
+        livenessProbe:
+
+          httpGet:
+
+            path: /
+
+            port: 8080
+
+          initialDelaySeconds: 30
+
+          timeoutSeconds: 30

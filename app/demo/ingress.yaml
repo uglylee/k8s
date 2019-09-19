@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx
+ # namespace: ingress-nginx
+  labels:
+    app: ingress-nginx
+spec:
+  type: LoadBalancer
+  externalIPs:
+  - 10.177.177.39
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: ingress-nginx
