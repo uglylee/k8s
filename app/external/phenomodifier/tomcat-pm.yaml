@@ -1,0 +1,72 @@
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: tomcat-pm
+  namespace: external
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tomcat-pm
+  template:
+    metadata:
+      labels:
+        app: tomcat-pm
+    spec:
+      containers:
+      - name: tomcat-pm
+        image: biosino/tomcat-pm    
+#    image: dev.biosino.org:8088/zhaoli/tomcat-pm
+        imagePullPolicy: Always
+        env:
+ #       - name: JAVA_HOME
+  #        value: /usr/local/openjdk-8
+   #     - name: PATH
+      #    value: /usr/local/openjdk-8/bin
+        - name: MYSQL_SERVICE_HOST
+          value: 'mysql-pm'
+#          value: '10.109.174.183'
+        - name: MYSQL_SERVICE_PORT
+          value: '3306'
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+  #      command: ["/usr/local/tomcat/bin/catalina.sh"]
+   #     args: ["run"]
+#        args: ['-c','/usr/local/tomcat/bin/catalina.sh','run']
+   #     volumeMounts:
+    #    - name: data-pm
+     ##     mountPath: "/usr/local/tomcat/webapps"
+     # volumes:
+     # - name: data-pm
+      #  persistentVolumeClaim:
+       #   claimName: claim-tomcat-pm
+      #  args:
+          # Uncomment the following line to manually specify Kubernetes API server Host
+          # If not specified, Dashboard will attempt to auto discover the API server and connect
+          # to it. Uncomment only if the default does not work.
+        #- --apiserver-host=http://47.97.90.38:8080  ## 请修改为自己的kube-apiserver
+#        livenessProbe:
+ #         httpGet:
+  #          path: /
+   #         port: 8080
+          #initialDelaySeconds: 30
+          #timeoutSeconds: 30
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: tomcat-pm
+  name: tomcat-pm
+  namespace: external
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 32001
+  selector:
+    app: tomcat-pm
+
