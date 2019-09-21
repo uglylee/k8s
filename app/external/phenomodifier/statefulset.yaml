@@ -11,7 +11,7 @@ spec:
   - port: 3306
     name: mysql-pm
     nodePort: 31002
-#  clusterIP: None
+##  clusterIP: None
   selector:
     app: mysql-pm
 ---

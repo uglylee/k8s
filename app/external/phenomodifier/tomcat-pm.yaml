@@ -1,4 +1,5 @@
 ---
+
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
@@ -17,7 +18,7 @@ spec:
       containers:
       - name: tomcat-pm
         image: biosino/tomcat-pm    
-#    image: dev.biosino.org:8088/zhaoli/tomcat-pm
+##    image: dev.biosino.org:8088/zhaoli/tomcat-pm
         imagePullPolicy: Always
         env:
  #       - name: JAVA_HOME
