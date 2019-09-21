@@ -1,0 +1,63 @@
+---
+
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: drp-afc
+  namespace: external
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drp-afc
+  template:
+    metadata:
+      labels:
+        app: drp-afc
+    spec:
+      containers:
+      - name: drp-afc
+        image: dev.biosino.org:8088/biosino/drp-afc    
+##    image: dev.biosino.org:8088/zhaoli/drp-afc
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5657
+          protocol: TCP
+  #      command: ["/usr/local/tomcat/bin/catalina.sh"]
+   #     args: ["run"]
+#        args: ['-c','/usr/local/tomcat/bin/catalina.sh','run']
+   #     volumeMounts:
+    #    - name: data-pm
+     ##     mountPath: "/usr/local/tomcat/webapps"
+     # volumes:
+     # - name: data-pm
+      #  persistentVolumeClaim:
+       #   claimName: claim-drp-afc
+      #  args:
+          # Uncomment the following line to manually specify Kubernetes API server Host
+          # If not specified, Dashboard will attempt to auto discover the API server and connect
+          # to it. Uncomment only if the default does not work.
+        #- --apiserver-host=http://47.97.90.38:8080  ## 请修改为自己的kube-apiserver
+#        livenessProbe:
+ #         httpGet:
+  #          path: /
+   #         port: 8080
+          #initialDelaySeconds: 30
+          #timeoutSeconds: 30
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: drp-afc
+  name: drp-afc
+  namespace: external
+spec:
+  type: NodePort
+  ports:
+  - port: 5657
+    targetPort: 5657
+    nodePort: 32007
+  selector:
+    app: drp-afc
+
