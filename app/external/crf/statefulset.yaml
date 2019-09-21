@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-crf
+  namespace: external
+  labels:
+    app: mysql-crf
+spec:
+  type: NodePort
+  ports:
+  - port: 3306
+    name: mysql-crf
+    nodePort: 31003
+#  clusterIP: None
+  selector:
+    app: mysql-crf
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: mysql-crf
+  namespace: external
+spec:
+  serviceName: "mysql-crf"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql-crf
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mysql-crf
+        image: biosino/mysql-crf
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: crf
+        ports:
+        - containerPort: 3306
+          name: mysql-crf
+        volumeMounts:
+        - name: db
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: db
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 1Gi
