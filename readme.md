@@ -23,16 +23,19 @@ k8s-node-01 | 10.177.177.37 | node | centos 7.6 | 5.2.14-1.el7.elrepo.x86_64 | d
 k8s-node-02 | 10.177.177.38 | node | centos 7.6 | 5.2.14-1.el7.elrepo.x86_64 | docker-ce-18.6.0
 keepalive | 10.177.177.39 | vip
 
-* 拉取项目
+* 拉取项目  
+
 ```shell
 git clone https://dev.biosino.org/git/zhaoli/k8s.git
 ```
-* 每个节点安装初始化环境
+* 每个节点安装初始化环境  
+
 ```shell
 tar zxvf install/kube1.15.3.tar.gz && cp kube/bin/kubeadm /usr/bin/kubeadm && cd kube/shell && sh init.sh
 ```
 
-* k8s-master-01
+* k8s-master-01  
+
 ```shell
 echo "10.177.177.34 apiserver.cluster.local" >> /etc/hosts
 #初始化集群
@@ -44,7 +47,8 @@ kubectl apply -f soft/calico/calico.yaml
 ```
 > 执行完会输出一些日志，里面包含join需要用的命令
 
-* k8s-master-02
+* k8s-master-02  
+
 ```shell
 echo "10.177.177.34 apiserver.cluster.local" >> /etc/hosts
 #加入集群
@@ -56,7 +60,8 @@ mkdir ~/.kube && cp /etc/kubernetes/admin.conf ~/.kube/config
 #将apiserver.cluster.local映射到本机ip
 sed -i s/10.177.177.34 apiserver.cluster.local/10.177.177.35 apiserver.cluster.local/g /etc/hosts
 ```
-* k8s-master-03
+* k8s-master-03  
+
 ```shell
 echo "10.177.177.34 apiserver.cluster.local" >> /etc/hosts
 #加入集群
@@ -68,7 +73,8 @@ mkdir ~/.kube && cp /etc/kubernetes/admin.conf ~/.kube/config
 #将apiserver.cluster.local映射到本机ip
 sed -i s/10.177.177.34 apiserver.cluster.local/10.177.177.35 apiserver.cluster.local/g /etc/hosts
 ```
-* k8s-node-01
+* k8s-node-01  
+
 ```shell
 echo "10.177.177.39 apiserver.cluster.local" >> /etc/hosts
 kubeadm join apiserver.cluster.local:6443 --token 9xl3oj.xwpls6jft9tov81o\
@@ -78,7 +84,8 @@ kubeadm join apiserver.cluster.local:6443 --token 9xl3oj.xwpls6jft9tov81o\
  --discovery-token-ca-cert-hash sha256:3aac728342ab0e2993b0cf7abd13ae703eb032828e26121ce7536d58083ad66f
 
  ```
-* k8s-node-02
+* k8s-node-02  
+
 ```shell
 echo "10.177.177.39 apiserver.cluster.local" >> /etc/hosts
 kubeadm join apiserver.cluster.local:6443 --token 9xl3oj.xwpls6jft9tov81o\
@@ -87,12 +94,14 @@ kubeadm join apiserver.cluster.local:6443 --token 9xl3oj.xwpls6jft9tov81o\
     --master 10.177.177.36:6443 \
  --discovery-token-ca-cert-hash sha256:3aac728342ab0e2993b0cf7abd13ae703eb032828e26121ce7536d58083ad66f
  ```
-* 查看集群状态
+* 查看集群状态  
+
 ```shell
 kubectl get node
  ```
 
-* 取消污点
+* 取消污点  
+
 > 默认安装完主节点是不能被分配除了系统插件之外的pod的
 
 ```shell
@@ -103,21 +112,24 @@ kubectl taint nodes k8s-master-02 node-role.kubernetes.io/master-
 kubectl taint nodes k8s-master-03 node-role.kubernetes.io/master-
 ```
 
-* 添加污点
+* 添加污点  
 
 > 希望某节点尽量不要被分配任务时添加污点
 
 kubectl taint nodes k8s-master-01 node-role.kubernetes.io/master=:PreferNoSchedule
 # Dashboard
-* 安装dashboard
+* 安装dashboard  
+
 ```shell
 kubectl create -f soft/dashboard/.
 ```
-* 访问dashboard
+* 访问dashboard  
+
 
 > https://10.177.177.34:32500
 
-* 生成访问key
+* 生成访问key  
+
 ```shell
 kubectl create serviceaccount dashboard-admin -n kube-system
 kubectl create clusterrolebinding dashboard-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin
@@ -127,18 +139,21 @@ kubectl describe secret dashboard-admin-token-mnzgv -n kube-system
 token下的一长串就是秘钥
 
 # ceph集群
-* 安装ceph集群
+* 安装ceph集群  
+
 
 > 安装ceph集群首先确定每台节点有已添加未格式化的硬盘,会自动给每块硬盘创建osd,安装需要等待几分钟
 
 ```shell
 kubectl create -f  pv/ceph/rook/.
  ```
-* 查看ceph集群状态
+* 查看ceph集群状态  
+
 ```shell
 kubectl exec -it rook-ceph-operator-7f7cf9bbff-9gwst  -n rook-ceph ceph status
 ```
-* 设置默认storageclass存储
+* 设置默认storageclass存储  
+
 > 设置默认storageclass存储,这样pvc模版在申请pv时不用配storageclass name
 
 ```shell
