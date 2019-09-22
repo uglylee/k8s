@@ -23,7 +23,7 @@ k8s-node-02 | 10.177.177.38 | node | centos 7.6 | 5.2.14-1.el7.elrepo.x86_64 | d
 keepalive | 10.177.177.39 | vip
 ##### 拉取项目
 ```shell
-git clone https://dev.biosino.org/zhaoli/k8s.git
+git clone https://dev.biosino.org/git/zhaoli/k8s.git
 ```
 ##### 每个节点安装初始化环境
 ```shell
