@@ -1,0 +1,73 @@
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: mainteance-node
+  namespace: www-biosino-org
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mainteance-node
+  template:
+    metadata:
+      labels:
+        app: mainteance-node
+    spec:
+      containers:
+      - name: mainteance-node
+        image: biosino/mainteance-node    
+#    image: dev.biosino.org:8088/zhaoli/tomcat-pm
+        imagePullPolicy: Always
+        env:
+ #       - name: JAVA_HOME
+  #        value: /usr/local/openjdk-8
+   #     - name: PATH
+      #    value: /usr/local/openjdk-8/bin
+        - name: MYSQL_SERVICE_HOST
+          value: 'mysql-nlp'
+#          value: '10.109.174.183'
+        - name: MYSQL_SERVICE_PORT
+          value: '3306'
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        command: ["/bin/bash"]
+        args: ["-c", "/usr/local/bin/python3 mainteance/manage.py runserver 0.0.0.0:8080"] 
+#        command: ["/usr/local/bin/python3 mainteance/manage.py runserver 0.0.0.0:8080"]
+   #     args: ["run"]
+#        args: ['-c','/usr/local/tomcat/bin/catalina.sh','run']
+   #     volumeMounts:
+    #    - name: data-pm
+     ##     mountPath: "/usr/local/tomcat/webapps"
+     # volumes:
+     # - name: data-pm
+      #  persistentVolumeClaim:
+       #   claimName: claim-tomcat-pm
+      #  args:
+          # Uncomment the following line to manually specify Kubernetes API server Host
+          # If not specified, Dashboard will attempt to auto discover the API server and connect
+          # to it. Uncomment only if the default does not work.
+        #- --apiserver-host=http://47.97.90.38:8080  ## 请修改为自己的kube-apiserver
+#        livenessProbe:
+ #         httpGet:
+  #          path: /
+   #         port: 8080
+          #initialDelaySeconds: 30
+          #timeoutSeconds: 30
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: mainteance-node
+  name: mainteance-node
+  namespace: www-biosino-org
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 32008
+  selector:
+    app: mainteance-node
