@@ -31,7 +31,8 @@ git clone https://dev.biosino.org/git/zhaoli/k8s.git
 * 每个节点安装初始化环境  
 
 ```shell
-tar zxvf install/kube1.15.3.tar.gz && cp kube/bin/kubeadm /usr/bin/kubeadm && cd kube/shell && sh init.sh
+wget https://dev.biosino.org/seafile/f/c8b71f4377ec408db11f/?dl=1 && mv index.html\?dl\=1  kube1.15.3.tar.gz 
+tar zxvf kube1.15.3.tar.gz && cp kube/bin/kubeadm /usr/bin/kubeadm && cd kube/shell && sh init.sh
 ```
 
 * k8s-master-01  
